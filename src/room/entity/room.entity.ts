@@ -2,6 +2,7 @@ import { Column, Entity } from 'typeorm';
 
 import { BaseEntity } from '../../common/entities/base.entity';
 import { RoomStatusEnum } from '../enums/room.status.enum';
+import { PlayerStatInterface } from '../interfaces/player.stat.interface';
 
 @Entity('rooms')
 export class RoomEntity extends BaseEntity {
@@ -16,8 +17,8 @@ export class RoomEntity extends BaseEntity {
   })
   status: RoomStatusEnum;
 
-  @Column('text', { array: true, nullable: true, default: '{}' })
-  players: string[];
+  @Column('jsonb', { nullable: true, default: '[]' })
+  players: PlayerStatInterface[];
 
   @Column({ type: 'text', nullable: true })
   winner: string;

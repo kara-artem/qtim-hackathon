@@ -1,10 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { UpdateUserStatDto } from './dto/update.user.stat.dto';
 import { RoomEntity } from './entity/room.entity';
 import { RoomStatusEnum } from './enums/room.status.enum';
+import { PlayerStatInterface } from './interfaces/player.stat.interface';
 
 @Injectable()
 export class RoomService {
@@ -37,13 +39,19 @@ export class RoomService {
       .where('room.status = :status', { status: RoomStatusEnum.WAITING })
       .getOne();
 
+    const playerStat: PlayerStatInterface = {
+      name: nickname,
+      guessedLetters: 0,
+      mistakes: 0,
+    };
+
     if (freeRoom) {
-      freeRoom.players.push(nickname);
+      freeRoom.players.push(playerStat);
       freeRoom.status = RoomStatusEnum.GAME;
       freeRoom.startedAt = new Date();
       return this.roomRepo.save(freeRoom);
     } else {
-      return this.roomRepo.save({ players: [nickname] });
+      return this.roomRepo.save({ players: [playerStat] });
     }
   }
 
@@ -57,5 +65,28 @@ export class RoomService {
     } catch (e) {
       throw new BadRequestException(e);
     }
+  }
+
+  async updatePlayerStat(
+    id: string,
+    nickname: string,
+    { guessedLetters, mistakes }: UpdateUserStatDto,
+  ): Promise<RoomEntity> {
+    const room = await this.roomRepo.findOne({ where: { id } });
+
+    if (!room) {
+      throw new NotFoundException('Комната не найдена');
+    }
+
+    const playerToUpdate: PlayerStatInterface | undefined = room.players.find((player) => player.name === nickname);
+
+    if (!playerToUpdate) {
+      throw new NotFoundException('Игрок не найден');
+    }
+
+    playerToUpdate.guessedLetters = guessedLetters;
+    playerToUpdate.mistakes = mistakes;
+
+    return this.roomRepo.save(room);
   }
 }
