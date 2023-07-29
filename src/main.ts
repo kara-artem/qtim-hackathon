@@ -13,7 +13,7 @@ import { config } from './common/config';
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.enableCors({
-    origin: true,
+    origin: ['http://localhost:3000', 'http://localhost:8080', 'http://195.2.79.224:7000'],
   });
 
   const swaggerConfig = new DocumentBuilder()
