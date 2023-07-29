@@ -12,6 +12,7 @@ import { config } from './common/config';
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  app.enableCors();
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle(`Swagger ${config.get('PROJECT_NAME')}`)
