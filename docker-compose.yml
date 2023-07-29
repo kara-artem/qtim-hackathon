@@ -1,0 +1,35 @@
+version: "3"
+services:
+  db:
+    container_name: 'kara_db'
+    image: postgres:14
+    environment:
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD}'
+      POSTGRES_DB: '${DB_NAME}'
+    networks:
+      - 'kara_internal'
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    volumes:
+      - kara_pgdata:/var/lib/postgresql/data
+    restart: always
+
+#  backend:
+#    container_name: 'kara_back'
+#    build:
+#      context: .
+#    ports:
+#      - '${PORT}:3000'
+#    networks:
+#      - 'kara_internal'
+#    depends_on:
+#      - db
+#    restart: always
+
+volumes:
+  kara_pgdata:
+
+networks:
+  kara_internal:
+    driver: bridge
