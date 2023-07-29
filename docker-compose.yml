@@ -15,17 +15,17 @@ services:
       - kara_pgdata:/var/lib/postgresql/data
     restart: always
 
-#  backend:
-#    container_name: 'kara_back'
-#    build:
-#      context: .
-#    ports:
-#      - '${PORT}:3000'
-#    networks:
-#      - 'kara_internal'
-#    depends_on:
-#      - db
-#    restart: always
+  backend:
+    container_name: 'kara_back'
+    build:
+      context: .
+    ports:
+      - '${PORT}:${PORT}'
+    networks:
+      - 'kara_internal'
+    depends_on:
+      - db
+    restart: always
 
 volumes:
   kara_pgdata:
