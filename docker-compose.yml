@@ -10,7 +10,7 @@ services:
     networks:
       - 'kara_internal'
     ports:
-      - '${DB_PORT}:5432'
+      - '${DB_EXTERNAL_PORT}:5432'
     volumes:
       - kara_pgdata:/var/lib/postgresql/data
     restart: always
