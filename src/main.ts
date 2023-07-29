@@ -7,13 +7,15 @@ import { AppModule } from './app.module';
 import { config } from './common/config';
 
 (async (): Promise<void> => {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+  });
 
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:8080', 'http://195.2.79.224:7000'],
+    origin: [process.env.APP_URL as string, /^http:\/\/localhost/],
   });
 
   const swaggerConfig = new DocumentBuilder()
