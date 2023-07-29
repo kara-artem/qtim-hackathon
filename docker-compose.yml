@@ -20,7 +20,7 @@ services:
     build:
       context: .
     ports:
-      - '${PORT}:${PORT}'
+      - '${PORT}:7005'
     networks:
       - 'kara_internal'
     depends_on:
