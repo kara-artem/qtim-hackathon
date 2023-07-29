@@ -46,6 +46,11 @@ export class RoomService {
     };
 
     if (freeRoom) {
+      const playerExists = freeRoom.players.some((player) => player.name === nickname);
+      if (playerExists) {
+        return freeRoom;
+      }
+
       freeRoom.players.push(playerStat);
       freeRoom.status = RoomStatusEnum.GAME;
       freeRoom.startedAt = new Date();
