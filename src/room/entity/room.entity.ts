@@ -5,6 +5,9 @@ import { RoomStatusEnum } from '../enums/room.status.enum';
 
 @Entity('rooms')
 export class RoomEntity extends BaseEntity {
+  @Column({ type: 'timestamp', nullable: true })
+  startedAt: Date;
+
   @Column({
     type: 'enum',
     enum: RoomStatusEnum,
@@ -15,4 +18,7 @@ export class RoomEntity extends BaseEntity {
 
   @Column('text', { array: true, nullable: true, default: '{}' })
   players: string[];
+
+  @Column({ type: 'text', nullable: true })
+  winner: string;
 }
